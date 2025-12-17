@@ -1,34 +1,11 @@
 import Link from "next/link";
+import Navbar from "@/components/layout/Navbar";
+import Footer from "@/components/layout/Footer";
 
 export default function HomePage() {
   return (
     <div className="min-h-screen">
-      {/* Navigation */}
-      <nav className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center">
-              <Link href="/" className="text-2xl font-bold text-primary-600">
-                MarketHub
-              </Link>
-            </div>
-            <div className="flex items-center gap-4">
-              <Link
-                href="/auth/login"
-                className="text-gray-700 hover:text-primary-600 transition"
-              >
-                Login
-              </Link>
-              <Link
-                href="/auth/register"
-                className="bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition"
-              >
-                Get Started
-              </Link>
-            </div>
-          </div>
-        </div>
-      </nav>
+      <Navbar />
 
       {/* Hero Section */}
       <section className="bg-gradient-to-br from-primary-50 to-blue-50 py-20">
@@ -67,7 +44,7 @@ export default function HomePage() {
           </h2>
           <div className="grid md:grid-cols-3 gap-8">
             {/* Feature 1 */}
-            <div className="text-center p-6">
+            <div className="text-center p-6 rounded-xl hover:shadow-lg transition">
               <div className="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <svg
                   className="w-8 h-8 text-primary-600"
@@ -91,7 +68,7 @@ export default function HomePage() {
             </div>
 
             {/* Feature 2 */}
-            <div className="text-center p-6">
+            <div className="text-center p-6 rounded-xl hover:shadow-lg transition">
               <div className="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <svg
                   className="w-8 h-8 text-primary-600"
@@ -114,7 +91,7 @@ export default function HomePage() {
             </div>
 
             {/* Feature 3 */}
-            <div className="text-center p-6">
+            <div className="text-center p-6 rounded-xl hover:shadow-lg transition">
               <div className="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <svg
                   className="w-8 h-8 text-primary-600"
@@ -140,6 +117,38 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Stats Section */}
+      <section className="bg-gray-50 py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid md:grid-cols-4 gap-8 text-center">
+            <div>
+              <div className="text-4xl font-bold text-primary-600 mb-2">
+                10K+
+              </div>
+              <div className="text-gray-600">Products</div>
+            </div>
+            <div>
+              <div className="text-4xl font-bold text-primary-600 mb-2">
+                500+
+              </div>
+              <div className="text-gray-600">Vendors</div>
+            </div>
+            <div>
+              <div className="text-4xl font-bold text-primary-600 mb-2">
+                50K+
+              </div>
+              <div className="text-gray-600">Customers</div>
+            </div>
+            <div>
+              <div className="text-4xl font-bold text-primary-600 mb-2">
+                100K+
+              </div>
+              <div className="text-gray-600">Orders Delivered</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* CTA Section */}
       <section className="bg-primary-600 py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -158,94 +167,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="bg-gray-900 text-white py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-4 gap-8">
-            <div>
-              <h3 className="text-xl font-bold mb-4">MarketHub</h3>
-              <p className="text-gray-400">
-                Your trusted multi-vendor marketplace
-              </p>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-4">Shop</h4>
-              <ul className="space-y-2 text-gray-400">
-                <li>
-                  <Link
-                    href="/products"
-                    className="hover:text-white transition"
-                  >
-                    All Products
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/products"
-                    className="hover:text-white transition"
-                  >
-                    Categories
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/products"
-                    className="hover:text-white transition"
-                  >
-                    Vendors
-                  </Link>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-4">Sell</h4>
-              <ul className="space-y-2 text-gray-400">
-                <li>
-                  <Link
-                    href="/vendor-dashboard"
-                    className="hover:text-white transition"
-                  >
-                    Vendor Dashboard
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/auth/register"
-                    className="hover:text-white transition"
-                  >
-                    Start Selling
-                  </Link>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-4">Support</h4>
-              <ul className="space-y-2 text-gray-400">
-                <li>
-                  <Link href="#" className="hover:text-white transition">
-                    Help Center
-                  </Link>
-                </li>
-                <li>
-                  <Link href="#" className="hover:text-white transition">
-                    Contact Us
-                  </Link>
-                </li>
-                <li>
-                  <Link href="#" className="hover:text-white transition">
-                    Terms & Conditions
-                  </Link>
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-            <p>
-              &copy; {new Date().getFullYear()} MarketHub. All rights reserved.
-            </p>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }
