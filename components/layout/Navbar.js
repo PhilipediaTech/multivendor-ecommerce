@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useSession, signOut } from "next-auth/react";
 import { useState } from "react";
+import CartDropdown from "@/components/customer/CartDropdown";
 
 export default function Navbar() {
   const { data: session, status } = useSession();
@@ -49,7 +50,10 @@ export default function Navbar() {
           </div>
 
           {/* Auth Section */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2">
+            {/* Cart Icon - Always visible */}
+            <CartDropdown />
+
             {status === "loading" ? (
               <div className="text-gray-500">Loading...</div>
             ) : session ? (
@@ -63,7 +67,9 @@ export default function Navbar() {
                       {session.user.name?.charAt(0).toUpperCase()}
                     </span>
                   </div>
-                  <span className="font-medium">{session.user.name}</span>
+                  <span className="font-medium hidden md:inline">
+                    {session.user.name}
+                  </span>
                   <svg
                     className="w-4 h-4"
                     fill="none"
