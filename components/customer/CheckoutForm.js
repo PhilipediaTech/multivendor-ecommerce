@@ -16,7 +16,7 @@ export default function CheckoutForm({ clientSecret, items, total }) {
   const { clearCart } = useCartStore();
 
   const [shippingAddress, setShippingAddress] = useState({
-    fullName: "",
+    name: "",
     street: "",
     city: "",
     state: "",
@@ -47,7 +47,7 @@ export default function CheckoutForm({ clientSecret, items, total }) {
 
     // Validate shipping address
     if (
-      !shippingAddress.fullName ||
+      !shippingAddress.name ||
       !shippingAddress.street ||
       !shippingAddress.city ||
       !shippingAddress.zipCode
@@ -117,8 +117,8 @@ export default function CheckoutForm({ clientSecret, items, total }) {
             </label>
             <input
               type="text"
-              name="fullName"
-              value={shippingAddress.fullName}
+              name="name"
+              value={shippingAddress.name}
               onChange={handleAddressChange}
               required
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"

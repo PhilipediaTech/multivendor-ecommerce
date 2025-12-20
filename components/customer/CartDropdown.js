@@ -123,6 +123,7 @@ export default function CartDropdown() {
                             src={item.image}
                             alt={item.name}
                             fill
+                            sizes="80px"
                             className="object-contain p-2"
                           />
                         ) : (
