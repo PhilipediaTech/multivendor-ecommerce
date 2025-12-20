@@ -9,12 +9,15 @@ import { formatCurrency } from "@/lib/utils/helpers";
 export default function CartDropdown() {
   const [isOpen, setIsOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
-  const { items, removeItem, getTotalItems, getTotal } = useCartStore();
+
+  // Don't destructure from useCartStore initially
+  const cartStore = useCartStore();
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
+  // Show loading state until mounted
   if (!mounted) {
     return (
       <button className="relative p-2 text-gray-700 hover:text-primary-600 transition">
@@ -35,6 +38,7 @@ export default function CartDropdown() {
     );
   }
 
+  const { items, removeItem, getTotalItems, getTotal } = cartStore;
   const totalItems = getTotalItems();
   const total = getTotal();
 

@@ -7,6 +7,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import useCartStore from "@/lib/store/cartStore";
 import { formatCurrency, calculateDiscount } from "@/lib/utils/helpers";
 import ImageGallery from "@/components/customer/ImageGallery";
 
@@ -21,6 +22,8 @@ export default function ProductDetailPage() {
   const [activeTab, setActiveTab] = useState("description");
 
   const [error, setError] = useState(null);
+
+  const { addItem } = useCartStore();
 
   useEffect(() => {
     fetchProduct();
@@ -52,13 +55,17 @@ export default function ProductDetailPage() {
   };
 
   const handleAddToCart = () => {
-    // TODO: Implement cart functionality in next step
+    if (!product) return;
+
+    addItem(product, quantity);
     alert(`Added ${quantity} item(s) to cart!`);
   };
 
   const handleBuyNow = () => {
-    // TODO: Implement checkout functionality
-    alert("Proceeding to checkout...");
+    if (!product) return;
+
+    addItem(product, quantity);
+    router.push("/checkout");
   };
 
   if (loading) {
