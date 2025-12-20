@@ -17,49 +17,105 @@ export async function POST(request) {
       );
     }
 
-    const { items, shippingAddress, paymentIntentId } = await request.json();
+    const body = await request.json();
+    const { items, shippingAddress, paymentIntentId } = body;
+
+    console.log("=== ORDER CREATION DEBUG ===");
+    console.log("User:", session.user.id);
+    console.log("Items received:", JSON.stringify(items, null, 2));
+    console.log("Shipping:", JSON.stringify(shippingAddress, null, 2));
 
     await connectDB();
 
     // Validate and get full product details
     const productIds = items.map((item) => item._id);
-    const products = await Product.find({ _id: { $in: productIds } });
+    console.log("Product IDs to fetch:", productIds);
+
+    const products = await Product.find({ _id: { $in: productIds } }).lean();
+    console.log("Products found:", products.length);
+    console.log(
+      "Products:",
+      JSON.stringify(
+        products.map((p) => ({ id: p._id, name: p.name, price: p.price })),
+        null,
+        2
+      )
+    );
 
     // Create order items with full details
-    const orderItems = items.map((item) => {
-      const product = products.find((p) => p._id.toString() === item._id);
+    const orderItems = [];
+
+    for (const item of items) {
+      const product = products.find(
+        (p) => p._id.toString() === item._id.toString()
+      );
 
       if (!product) {
+        console.error(`Product not found: ${item._id}`);
         throw new Error(`Product ${item._id} not found`);
       }
 
-      return {
+      const price = Number(product.price);
+      const quantity = Number(item.quantity);
+
+      console.log(`Item: ${product.name}, Price: ${price}, Qty: ${quantity}`);
+
+      if (isNaN(price) || isNaN(quantity)) {
+        console.error(
+          `Invalid price or quantity: price=${price}, qty=${quantity}`
+        );
+        throw new Error(
+          `Invalid price or quantity for product ${product.name}`
+        );
+      }
+
+      orderItems.push({
         product: product._id,
         productName: product.name,
-        quantity: item.quantity,
-        price: product.price,
+        quantity: quantity,
+        price: price,
         vendor: product.vendor,
-      };
-    });
+      });
+    }
 
-    // Calculate totals
-    const subtotal = orderItems.reduce(
-      (sum, item) => sum + item.price * item.quantity,
-      0
-    );
+    console.log("Order items created:", JSON.stringify(orderItems, null, 2));
+
+    // Calculate totals - ensure all values are numbers
+    let subtotal = 0;
+    for (const item of orderItems) {
+      const itemTotal = item.price * item.quantity;
+      console.log(
+        `${item.productName}: £${item.price} × ${item.quantity} = £${itemTotal}`
+      );
+      subtotal += itemTotal;
+    }
+
+    console.log("Subtotal calculated:", subtotal);
+
     const shipping = subtotal > 50 ? 0 : 5.99;
     const tax = subtotal * 0.2; // 20% VAT
     const total = subtotal + shipping + tax;
 
-    // Create order
-    const order = await Order.create({
+    console.log("Final calculations:");
+    console.log("  Subtotal:", subtotal);
+    console.log("  Shipping:", shipping);
+    console.log("  Tax:", tax);
+    console.log("  Total:", total);
+
+    // Verify all numbers are valid
+    if (isNaN(subtotal) || isNaN(shipping) || isNaN(tax) || isNaN(total)) {
+      console.error("NaN DETECTED!", { subtotal, shipping, tax, total });
+      throw new Error("Invalid order total calculation - NaN detected");
+    }
+
+    const orderData = {
       orderNumber: generateOrderNumber(),
       customer: session.user.id,
       items: orderItems,
-      subtotal,
-      shipping,
-      tax,
-      total,
+      subtotal: Math.round(subtotal * 100) / 100,
+      shipping: Math.round(shipping * 100) / 100,
+      tax: Math.round(tax * 100) / 100,
+      total: Math.round(total * 100) / 100,
       shippingAddress,
       paymentInfo: {
         method: "stripe",
@@ -67,6 +123,19 @@ export async function POST(request) {
         status: "paid",
       },
       status: "pending",
+    };
+
+    console.log("Order data to save:", JSON.stringify(orderData, null, 2));
+
+    // Create order
+    const order = await Order.create(orderData);
+
+    console.log("Order created successfully:", order._id);
+    console.log("Order totals from DB:", {
+      subtotal: order.subtotal,
+      shipping: order.shipping,
+      tax: order.tax,
+      total: order.total,
     });
 
     // Update product stock
@@ -75,6 +144,9 @@ export async function POST(request) {
         $inc: { stock: -item.quantity },
       });
     }
+
+    console.log("Stock updated for all products");
+    console.log("=== ORDER CREATION COMPLETE ===");
 
     return NextResponse.json(
       {
@@ -89,7 +161,9 @@ export async function POST(request) {
       { status: 201 }
     );
   } catch (error) {
-    console.error("Error creating order:", error);
+    console.error("=== ORDER CREATION ERROR ===");
+    console.error("Error:", error.message);
+    console.error("Stack:", error.stack);
     return NextResponse.json(
       {
         success: false,

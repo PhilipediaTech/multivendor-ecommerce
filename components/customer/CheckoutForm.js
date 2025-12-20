@@ -76,7 +76,10 @@ export default function CheckoutForm({ clientSecret, items, total }) {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            items,
+            items: items.map((item) => ({
+              _id: item._id,
+              quantity: item.quantity,
+            })),
             shippingAddress,
             paymentIntentId: paymentIntent.id,
           }),
