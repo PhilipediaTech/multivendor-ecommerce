@@ -20,23 +20,32 @@ export default function ProductDetailPage() {
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState("description");
 
+  const [error, setError] = useState(null);
+
   useEffect(() => {
     fetchProduct();
   }, [params.id]);
 
   const fetchProduct = async () => {
     try {
+      console.log("Fetching product with ID:", params.id);
       const response = await fetch(`/api/products/${params.id}`);
-      const data = await response.json();
 
-      if (data.success) {
+      console.log("Response status:", response.status);
+
+      const data = await response.json();
+      console.log("Response data:", data);
+
+      if (data.success && data.product) {
         setProduct(data.product);
+        setError(null);
       } else {
-        router.push("/products");
+        setError(data.message || "Product not found");
+        // Don't redirect immediately - show error
       }
     } catch (error) {
       console.error("Error fetching product:", error);
-      router.push("/products");
+      setError("Failed to load product");
     } finally {
       setLoading(false);
     }
@@ -73,8 +82,51 @@ export default function ProductDetailPage() {
     );
   }
 
-  if (!product) {
-    return null;
+  // Show error if product not found
+  if (error || !product) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <Navbar />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-12 text-center">
+            <svg
+              className="mx-auto h-16 w-16 text-red-400 mb-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+              />
+            </svg>
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">
+              Product Not Found
+            </h2>
+            <p className="text-gray-600 mb-6">
+              {error || "The product you are looking for does not exist."}
+            </p>
+            <div className="space-y-2 text-left bg-gray-50 p-4 rounded-lg mb-6">
+              <p className="text-sm text-gray-600">
+                <strong>Product ID:</strong> {params.id}
+              </p>
+              <p className="text-sm text-gray-600">
+                <strong>Error:</strong> {error || "Not found in database"}
+              </p>
+            </div>
+            <Link
+              href="/products"
+              className="inline-block bg-primary-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-primary-700 transition"
+            >
+              ← Back to Products
+            </Link>
+          </div>
+        </div>
+        <Footer />
+      </div>
+    );
   }
 
   const discount = calculateDiscount(product.price, product.comparePrice);

@@ -27,7 +27,7 @@ export default function ProductsPage() {
     setLoading(true);
     try {
       const params = new URLSearchParams();
-
+      console.log(params);
       if (filters.category !== "all")
         params.append("category", filters.category);
       if (filters.search) params.append("search", filters.search);
