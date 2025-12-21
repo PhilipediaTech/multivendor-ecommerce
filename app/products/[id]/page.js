@@ -10,6 +10,8 @@ import Footer from "@/components/layout/Footer";
 import useCartStore from "@/lib/store/cartStore";
 import { formatCurrency, calculateDiscount } from "@/lib/utils/helpers";
 import ImageGallery from "@/components/customer/ImageGallery";
+import ProductReviews from "@/components/product/ProductReviews";
+import ReviewStars from "@/components/product/ReviewStars";
 
 export default function ProductDetailPage() {
   const params = useParams();
@@ -180,8 +182,19 @@ export default function ProductDetailPage() {
               {product.name}
             </h1>
 
+            {/* Add Rating Display */}
+            {product.numReviews > 0 && (
+              <div className="flex items-center gap-3 mb-4">
+                <ReviewStars rating={product.rating} size="md" showNumber />
+                <span className="text-sm text-gray-600">
+                  ({product.numReviews}{" "}
+                  {product.numReviews === 1 ? "review" : "reviews"})
+                </span>
+              </div>
+            )}
+
             {/* Rating */}
-            <div className="flex items-center gap-2 mb-4">
+            {/* <div className="flex items-center gap-2 mb-4">
               <div className="flex">
                 {[...Array(5)].map((_, i) => (
                   <svg
@@ -201,7 +214,7 @@ export default function ProductDetailPage() {
               <span className="text-gray-600">
                 {product.rating.toFixed(1)} ({product.numReviews} reviews)
               </span>
-            </div>
+            </div> */}
 
             {/* Price */}
             <div className="mb-6">
@@ -461,7 +474,7 @@ export default function ProductDetailPage() {
               >
                 Specifications
               </button>
-              <button
+              {/* <button
                 onClick={() => setActiveTab("reviews")}
                 className={`px-6 py-4 font-medium ${
                   activeTab === "reviews"
@@ -470,7 +483,7 @@ export default function ProductDetailPage() {
                 }`}
               >
                 Reviews ({product.numReviews})
-              </button>
+              </button> */}
             </div>
           </div>
 
@@ -541,6 +554,10 @@ export default function ProductDetailPage() {
             )}
           </div>
         </div>
+      </div>
+
+      <div className="mt-10 mb-5 ml-8 mr-8">
+        <ProductReviews productId={product._id.toString()} />
       </div>
 
       <Footer />

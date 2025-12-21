@@ -98,17 +98,28 @@ export default function Navbar() {
                         {session.user.role}
                       </p>
                     </div>
-                    <Link
-                      href={
-                        session.user.role === "vendor"
-                          ? "/vendor-dashboard"
-                          : "/dashboard"
-                      }
-                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                      onClick={() => setShowDropdown(false)}
-                    >
-                      Dashboard
-                    </Link>
+                    {session.user.role === "admin" && (
+                      <Link
+                        href="/admin"
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      >
+                        Admin Dashboard
+                      </Link>
+                    )}
+                    {session.user.role !== "admin" && (
+                      <Link
+                        href={
+                          session.user.role === "vendor"
+                            ? "/vendor-dashboard"
+                            : "/dashboard"
+                        }
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        onClick={() => setShowDropdown(false)}
+                      >
+                        {session.user.role === "vendor" && "Vendor Dashboard "}
+                        {session.user.role === "customer" && "My Dashboard"}
+                      </Link>
+                    )}
                     <Link
                       href="/profile"
                       className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"

@@ -56,6 +56,7 @@ export default function AdminDashboard() {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      {/* Navbar */}
       <nav className="bg-white border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
@@ -78,11 +79,13 @@ export default function AdminDashboard() {
       </nav>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
           <p className="text-gray-600 mt-2">Platform overview and management</p>
         </div>
 
+        {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
             <div className="flex items-center justify-between mb-4">
@@ -187,7 +190,147 @@ export default function AdminDashboard() {
           </div>
         </div>
 
+        {/* Quick Action Buttons */}
+        <div className="mb-8">
+          <h2 className="text-xl font-semibold text-gray-900 mb-4">
+            Quick Actions
+          </h2>
+          <div className="grid md:grid-cols-3 gap-6">
+            <Link
+              href="/admin/users"
+              className="bg-white rounded-xl shadow-sm border-2 border-gray-200 p-6 hover:border-primary-500 hover:shadow-md transition group"
+            >
+              <div className="flex items-center gap-4 mb-4">
+                <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center group-hover:bg-blue-200 transition">
+                  <svg
+                    className="w-6 h-6 text-blue-600"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
+                    />
+                  </svg>
+                </div>
+                <div className="flex-1">
+                  <h3 className="font-semibold text-gray-900 text-lg">
+                    Manage Users
+                  </h3>
+                  <p className="text-sm text-gray-600">
+                    View and edit all users
+                  </p>
+                </div>
+                <svg
+                  className="w-5 h-5 text-gray-400 group-hover:text-primary-600 transition"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 5l7 7-7 7"
+                  />
+                </svg>
+              </div>
+            </Link>
+
+            <Link
+              href="/admin/orders"
+              className="bg-white rounded-xl shadow-sm border-2 border-gray-200 p-6 hover:border-primary-500 hover:shadow-md transition group"
+            >
+              <div className="flex items-center gap-4 mb-4">
+                <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center group-hover:bg-green-200 transition">
+                  <svg
+                    className="w-6 h-6 text-green-600"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+                    />
+                  </svg>
+                </div>
+                <div className="flex-1">
+                  <h3 className="font-semibold text-gray-900 text-lg">
+                    Manage Orders
+                  </h3>
+                  <p className="text-sm text-gray-600">
+                    View all platform orders
+                  </p>
+                </div>
+                <svg
+                  className="w-5 h-5 text-gray-400 group-hover:text-primary-600 transition"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 5l7 7-7 7"
+                  />
+                </svg>
+              </div>
+            </Link>
+
+            <Link
+              href="/products"
+              className="bg-white rounded-xl shadow-sm border-2 border-gray-200 p-6 hover:border-primary-500 hover:shadow-md transition group"
+            >
+              <div className="flex items-center gap-4 mb-4">
+                <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center group-hover:bg-purple-200 transition">
+                  <svg
+                    className="w-6 h-6 text-purple-600"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
+                    />
+                  </svg>
+                </div>
+                <div className="flex-1">
+                  <h3 className="font-semibold text-gray-900 text-lg">
+                    View Products
+                  </h3>
+                  <p className="text-sm text-gray-600">Browse all products</p>
+                </div>
+                <svg
+                  className="w-5 h-5 text-gray-400 group-hover:text-primary-600 transition"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 5l7 7-7 7"
+                  />
+                </svg>
+              </div>
+            </Link>
+          </div>
+        </div>
+
+        {/* Recent Activity */}
         <div className="grid lg:grid-cols-2 gap-6">
+          {/* Recent Users */}
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-lg font-semibold text-gray-900">
@@ -197,7 +340,7 @@ export default function AdminDashboard() {
                 href="/admin/users"
                 className="text-primary-600 hover:text-primary-700 text-sm font-medium"
               >
-                View All
+                View All →
               </Link>
             </div>
             <div className="space-y-4">
@@ -231,6 +374,7 @@ export default function AdminDashboard() {
             </div>
           </div>
 
+          {/* Recent Orders */}
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-lg font-semibold text-gray-900">
@@ -240,7 +384,7 @@ export default function AdminDashboard() {
                 href="/admin/orders"
                 className="text-primary-600 hover:text-primary-700 text-sm font-medium"
               >
-                View All
+                View All →
               </Link>
             </div>
             <div className="space-y-4">

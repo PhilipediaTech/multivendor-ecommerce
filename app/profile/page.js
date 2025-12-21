@@ -50,12 +50,12 @@ export default function ProfilePage() {
           name: data.user.name || "",
           email: data.user.email || "",
           phone: data.user.phone || "",
-          address: data.user.address || {
-            street: "",
-            city: "",
-            state: "",
-            zipCode: "",
-            country: "United Kingdom",
+          address: {
+            street: data.user.address?.street || "",
+            city: data.user.address?.city || "",
+            state: data.user.address?.state || "",
+            zipCode: data.user.address?.zipCode || "",
+            country: data.user.address?.country || "United Kingdom",
           },
         });
       }
@@ -71,18 +71,18 @@ export default function ProfilePage() {
 
     if (name.startsWith("address.")) {
       const addressField = name.split(".")[1];
-      setFormData({
-        ...formData,
+      setFormData((prev) => ({
+        ...prev,
         address: {
-          ...formData.address,
-          [addressField]: value,
+          ...prev.address,
+          [addressField]: value || "",
         },
-      });
+      }));
     } else {
-      setFormData({
-        ...formData,
-        [name]: value,
-      });
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value || "",
+      }));
     }
   };
 
@@ -135,14 +135,12 @@ export default function ProfilePage() {
       <Navbar />
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900">My Profile</h1>
           <p className="text-gray-600 mt-2">Manage your account information</p>
         </div>
 
         <div className="grid lg:grid-cols-4 gap-6">
-          {/* Sidebar */}
           <div className="lg:col-span-1">
             <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
               <nav className="space-y-1">
@@ -209,10 +207,8 @@ export default function ProfilePage() {
             </div>
           </div>
 
-          {/* Main Content */}
           <div className="lg:col-span-3">
             <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Personal Information */}
               <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
                 <h2 className="text-lg font-semibold text-gray-900 mb-4">
                   Personal Information
@@ -226,7 +222,7 @@ export default function ProfilePage() {
                     <input
                       type="text"
                       name="name"
-                      value={formData.name}
+                      value={formData.name || ""}
                       onChange={handleChange}
                       required
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
@@ -240,7 +236,7 @@ export default function ProfilePage() {
                     <input
                       type="email"
                       name="email"
-                      value={formData.email}
+                      value={formData.email || ""}
                       onChange={handleChange}
                       required
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
@@ -254,7 +250,7 @@ export default function ProfilePage() {
                     <input
                       type="tel"
                       name="phone"
-                      value={formData.phone}
+                      value={formData.phone || ""}
                       onChange={handleChange}
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
                     />
@@ -274,7 +270,6 @@ export default function ProfilePage() {
                 </div>
               </div>
 
-              {/* Address */}
               <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
                 <h2 className="text-lg font-semibold text-gray-900 mb-4">
                   Address
@@ -288,7 +283,7 @@ export default function ProfilePage() {
                     <input
                       type="text"
                       name="address.street"
-                      value={formData.address.street}
+                      value={formData.address?.street || ""}
                       onChange={handleChange}
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
                     />
@@ -302,7 +297,7 @@ export default function ProfilePage() {
                       <input
                         type="text"
                         name="address.city"
-                        value={formData.address.city}
+                        value={formData.address?.city || ""}
                         onChange={handleChange}
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
                       />
@@ -315,7 +310,7 @@ export default function ProfilePage() {
                       <input
                         type="text"
                         name="address.state"
-                        value={formData.address.state}
+                        value={formData.address?.state || ""}
                         onChange={handleChange}
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
                       />
@@ -330,7 +325,7 @@ export default function ProfilePage() {
                       <input
                         type="text"
                         name="address.zipCode"
-                        value={formData.address.zipCode}
+                        value={formData.address?.zipCode || ""}
                         onChange={handleChange}
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
                       />
@@ -343,7 +338,7 @@ export default function ProfilePage() {
                       <input
                         type="text"
                         name="address.country"
-                        value={formData.address.country}
+                        value={formData.address?.country || "United Kingdom"}
                         onChange={handleChange}
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50"
                         readOnly
@@ -353,7 +348,6 @@ export default function ProfilePage() {
                 </div>
               </div>
 
-              {/* Message */}
               {message && (
                 <div
                   className={`p-4 rounded-lg ${
@@ -366,7 +360,6 @@ export default function ProfilePage() {
                 </div>
               )}
 
-              {/* Actions */}
               <div className="flex justify-end gap-4">
                 <button
                   type="button"

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { formatCurrency, calculateDiscount } from "@/lib/utils/helpers";
+import ReviewStars from "@/components/product/ReviewStars";
 
 export default function ProductCard({ product }) {
   const discount = calculateDiscount(product.price, product.comparePrice);
@@ -82,7 +83,16 @@ export default function ProductCard({ product }) {
         </p>
 
         {/* Rating */}
-        <div className="flex items-center gap-1 mb-2">
+        {/* Add Rating Display */}
+        {product.numReviews > 0 && (
+          <div className="flex items-center gap-2 mb-2">
+            <ReviewStars rating={product.rating} size="sm" />
+            <span className="text-xs text-gray-600">
+              ({product.numReviews})
+            </span>
+          </div>
+        )}
+        {/* <div className="flex items-center gap-1 mb-2">
           <div className="flex">
             {[...Array(5)].map((_, i) => (
               <svg
@@ -100,7 +110,7 @@ export default function ProductCard({ product }) {
             ))}
           </div>
           <span className="text-xs text-gray-600">({product.numReviews})</span>
-        </div>
+        </div> */}
 
         {/* Price */}
         <div className="flex items-center gap-2">

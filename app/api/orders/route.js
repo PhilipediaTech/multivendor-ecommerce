@@ -148,6 +148,35 @@ export async function POST(request) {
     console.log("Stock updated for all products");
     console.log("=== ORDER CREATION COMPLETE ===");
 
+    // Send order confirmation email
+    try {
+      const { orderConfirmationTemplate } = await import(
+        "@/lib/utils/emailTemplates"
+      );
+      const { sendEmail } = await import("@/lib/utils/email");
+
+      const populatedOrder = await Order.findById(order._id)
+        .populate("customer", "name email")
+        .lean();
+
+      const emailContent = orderConfirmationTemplate(
+        populatedOrder,
+        populatedOrder.customer.name
+      );
+
+      await sendEmail(
+        populatedOrder.customer.email,
+        emailContent.subject,
+        emailContent.html,
+        emailContent.text
+      );
+
+      console.log("✅ Order confirmation email sent");
+    } catch (emailError) {
+      console.error("❌ Failed to send order confirmation email:", emailError);
+      // Don't fail the order if email fails
+    }
+
     return NextResponse.json(
       {
         success: true,

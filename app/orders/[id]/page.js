@@ -242,6 +242,18 @@ export default function OrderDetailPage({ params }) {
                       <p className="text-sm text-gray-600 mt-1">
                         Quantity: {item.quantity} × {formatCurrency(item.price)}
                       </p>
+                      <p className="text-sm text-gray-600 mt-1">
+                        {order.status === "delivered" && (
+                          <Link
+                            href={`/products/${item.product}#reviews`}
+                            className="inline-block mt-2 text-sm text-primary-600 hover:text-primary-700 font-medium"
+                          >
+                            <button className="flex-1 sm:flex-none bg-blue-100 text-gray-700 px-6 py-2 rounded-lg font-medium hover:bg-gray-200 transition">
+                              <strong>Leave a Review</strong>
+                            </button>
+                          </Link>
+                        )}
+                      </p>
                     </div>
                     <p className="font-semibold text-gray-900">
                       {formatCurrency(item.price * item.quantity)}

@@ -1,15 +1,20 @@
 import mongoose from "mongoose";
 
-const ReviewSchema = new mongoose.Schema(
+const reviewSchema = new mongoose.Schema(
   {
     product: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Product",
       required: true,
     },
-    customer: {
+    user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
+      required: true,
+    },
+    order: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Order",
       required: true,
     },
     rating: {
@@ -18,32 +23,31 @@ const ReviewSchema = new mongoose.Schema(
       min: 1,
       max: 5,
     },
+    title: {
+      type: String,
+      required: true,
+      trim: true,
+      maxLength: 100,
+    },
     comment: {
       type: String,
       required: true,
+      trim: true,
+      maxLength: 1000,
     },
-    images: [
-      {
-        url: String,
-        publicId: String,
-      },
-    ],
-    isVerifiedPurchase: {
+    verified: {
       type: Boolean,
-      default: false,
+      default: true, // Verified purchase
+    },
+    helpful: {
+      type: Number,
+      default: 0,
     },
   },
-  {
-    timestamps: true,
-  }
+  { timestamps: true }
 );
 
-// Indexes
-ReviewSchema.index({ product: 1 });
-ReviewSchema.index({ customer: 1 });
-ReviewSchema.index({ rating: 1 });
+// Ensure one review per user per product
+reviewSchema.index({ product: 1, user: 1 }, { unique: true });
 
-// Ensure one review per customer per product
-ReviewSchema.index({ product: 1, customer: 1 }, { unique: true });
-
-export default mongoose.models.Review || mongoose.model("Review", ReviewSchema);
+export default mongoose.models.Review || mongoose.model("Review", reviewSchema);

@@ -54,6 +54,28 @@ export async function POST(request) {
       role: role === "vendor" ? "vendor" : "customer", // Only allow customer or vendor on registration
     });
 
+    // Send welcome email
+    try {
+      const { welcomeEmailTemplate } = await import(
+        "@/lib/utils/emailTemplates"
+      );
+      const { sendEmail } = await import("@/lib/utils/email");
+
+      const emailContent = welcomeEmailTemplate(user.name, user.email);
+
+      await sendEmail(
+        user.email,
+        emailContent.subject,
+        emailContent.html,
+        emailContent.text
+      );
+
+      console.log("✅ Welcome email sent to:", user.email);
+    } catch (emailError) {
+      console.error("❌ Failed to send welcome email:", emailError);
+      // Don't fail registration if email fails
+    }
+
     // Return user without password
     const userResponse = {
       id: user._id,

@@ -249,11 +249,6 @@ export default function CustomerOrdersPage() {
                     >
                       View Details
                     </Link>
-                    {order.status === "delivered" && (
-                      <button className="flex-1 sm:flex-none bg-gray-100 text-gray-700 px-6 py-2 rounded-lg font-medium hover:bg-gray-200 transition">
-                        Leave Review
-                      </button>
-                    )}
                   </div>
                 </div>
               </div>
