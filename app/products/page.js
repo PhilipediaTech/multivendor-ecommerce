@@ -39,7 +39,7 @@ export default function ProductsPage() {
 
       const response = await fetch(`/api/products?${params.toString()}`);
       const data = await response.json();
-
+      console.log(data);
       if (data.success) {
         setProducts(data.products);
         setPagination(data.pagination);
@@ -74,7 +74,11 @@ export default function ProductsPage() {
               placeholder="Search for products..."
               value={filters.search}
               onChange={(e) =>
-                setFilters({ ...filters, search: e.target.value, page: 1 })
+                setFilters({
+                  ...filters,
+                  search: e.target.value,
+                  page: 1,
+                })
               }
               className="w-full px-4 py-3 pl-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
             />

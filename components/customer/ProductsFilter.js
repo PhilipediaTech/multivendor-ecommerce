@@ -2,7 +2,7 @@
 
 export default function ProductsFilter({ filters, setFilters }) {
   const categories = [
-    "All",
+    "all",
     "Electronics",
     "Fashion",
     "Home & Garden",
@@ -35,12 +35,19 @@ export default function ProductsFilter({ filters, setFilters }) {
                 type="radio"
                 name="category"
                 value={category.toLowerCase()}
-                checked={
-                  filters.category === category.toLowerCase() ||
-                  (category === "All" && filters.category === "all")
-                }
-                onChange={(e) =>
-                  setFilters({ ...filters, category: e.target.value, page: 1 })
+                // checked={
+                //   filters.category === category.toLowerCase() ||
+                //   (category === "All" && filters.category === "all")
+                // }
+                checked={filters.category === category}
+                onChange={() =>
+                  category === "all"
+                    ? setFilters({ ...filters, category: "all", page: 1 })
+                    : setFilters({
+                        ...filters,
+                        category,
+                        page: 1,
+                      })
                 }
                 className="w-4 h-4 text-primary-600 focus:ring-primary-500"
               />

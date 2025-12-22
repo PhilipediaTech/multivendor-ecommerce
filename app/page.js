@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import SearchBar from "@/components/layout/SearchBar";
 
 export default function HomePage() {
   return (
@@ -25,6 +26,9 @@ export default function HomePage() {
               >
                 Start Shopping
               </Link>
+              <div className="text-center hidden md:block mx-8">
+                <SearchBar />
+              </div>
               <Link
                 href="/auth/register"
                 className="bg-white text-primary-600 border-2 border-primary-600 px-8 py-3 rounded-lg font-semibold hover:bg-primary-50 transition"

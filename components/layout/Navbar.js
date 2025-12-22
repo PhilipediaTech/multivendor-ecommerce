@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useSession, signOut } from "next-auth/react";
 import { useState } from "react";
 import CartDropdown from "@/components/customer/CartDropdown";
+import SearchBar from "./SearchBar";
 
 export default function Navbar() {
   const { data: session, status } = useSession();
