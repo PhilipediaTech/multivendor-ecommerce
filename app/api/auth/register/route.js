@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
+import bcrypt from "bcryptjs";
 import connectDB from "@/lib/db/mongodb";
 import User from "@/models/User";
-import bcrypt from "bcryptjs";
 
 export async function POST(request) {
   try {
@@ -10,7 +10,7 @@ export async function POST(request) {
     // Validation
     if (!name || !email || !password) {
       return NextResponse.json(
-        { success: false, message: "Please provide all required fields" },
+        { success: false, message: "All fields are required" },
         { status: 400 }
       );
     }
@@ -44,14 +44,31 @@ export async function POST(request) {
     }
 
     // Hash password
-    const hashedPassword = await bcrypt.hash(password, 12);
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Determine the actual role and vendor application status
+    let actualRole = "customer";
+    let vendorInfo = {};
+
+    if (role === "vendor") {
+      // User wants to be a vendor - create as customer with pending application
+      actualRole = "customer";
+      vendorInfo = {
+        shopName: "", // Will be filled when they complete application
+        shopDescription: "",
+        applicationStatus: "pending",
+        isApproved: false,
+        appliedAt: new Date(),
+      };
+    }
 
     // Create user
     const user = await User.create({
       name,
       email: email.toLowerCase(),
       password: hashedPassword,
-      role: role === "vendor" ? "vendor" : "customer", // Only allow customer or vendor on registration
+      role: actualRole,
+      vendorInfo: role === "vendor" ? vendorInfo : undefined,
     });
 
     // Send welcome email
@@ -73,30 +90,31 @@ export async function POST(request) {
       console.log("✅ Welcome email sent to:", user.email);
     } catch (emailError) {
       console.error("❌ Failed to send welcome email:", emailError);
-      // Don't fail registration if email fails
     }
 
-    // Return user without password
-    const userResponse = {
-      id: user._id,
-      name: user.name,
-      email: user.email,
-      role: user.role,
-      avatar: user.avatar,
-    };
+    // If vendor application, notify them about pending status
+    if (role === "vendor") {
+      console.log("📋 Vendor application created for:", user.email);
+    }
 
-    return NextResponse.json(
-      {
-        success: true,
-        message: "Account created successfully",
-        user: userResponse,
+    return NextResponse.json({
+      success: true,
+      message:
+        role === "vendor"
+          ? "Account created! Your vendor application is pending review."
+          : "Account created successfully!",
+      requiresApproval: role === "vendor",
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
       },
-      { status: 201 }
-    );
+    });
   } catch (error) {
     console.error("Registration error:", error);
     return NextResponse.json(
-      { success: false, message: "Server error. Please try again later." },
+      { success: false, message: "Server error" },
       { status: 500 }
     );
   }

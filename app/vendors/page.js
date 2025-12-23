@@ -90,12 +90,12 @@ export default async function VendorsPage() {
                     </div>
                   </div>
 
-                  {vendor.businessName && (
+                  {vendor.shopName && (
                     <div className="mb-4">
                       <p className="text-sm font-medium text-gray-700">
                         Business Name
                       </p>
-                      <p className="text-gray-900">{vendor.businessName}</p>
+                      <p className="text-gray-900">{vendor.shopName}</p>
                     </div>
                   )}
 

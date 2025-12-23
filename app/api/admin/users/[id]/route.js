@@ -4,7 +4,44 @@ import connectDB from "@/lib/db/mongodb";
 import User from "@/models/User";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
-// Update user role
+// GET single user details
+export async function GET(request, context) {
+  try {
+    const params = await context.params;
+    const session = await getServerSession(authOptions);
+
+    if (!session || session.user.role !== "admin") {
+      return NextResponse.json(
+        { success: false, message: "Unauthorized" },
+        { status: 401 }
+      );
+    }
+
+    await connectDB();
+
+    const user = await User.findById(params.id).select("-password").lean();
+
+    if (!user) {
+      return NextResponse.json(
+        { success: false, message: "User not found" },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json({
+      success: true,
+      user,
+    });
+  } catch (error) {
+    console.error("Error fetching user:", error);
+    return NextResponse.json(
+      { success: false, message: "Server error" },
+      { status: 500 }
+    );
+  }
+}
+
+// PATCH update user role
 export async function PATCH(request, context) {
   try {
     const params = await context.params;
@@ -49,13 +86,13 @@ export async function PATCH(request, context) {
   } catch (error) {
     console.error("Error updating user:", error);
     return NextResponse.json(
-      { success: false, message: "Server error" },
+      { success: false, message: "Failed to update user role" },
       { status: 500 }
     );
   }
 }
 
-// Delete user
+// DELETE user
 export async function DELETE(request, context) {
   try {
     const params = await context.params;
@@ -71,7 +108,7 @@ export async function DELETE(request, context) {
     // Prevent admin from deleting themselves
     if (params.id === session.user.id) {
       return NextResponse.json(
-        { success: false, message: "Cannot delete your own account" },
+        { success: false, message: "You cannot delete your own account" },
         { status: 400 }
       );
     }
@@ -94,7 +131,7 @@ export async function DELETE(request, context) {
   } catch (error) {
     console.error("Error deleting user:", error);
     return NextResponse.json(
-      { success: false, message: "Server error" },
+      { success: false, message: "Failed to delete user" },
       { status: 500 }
     );
   }

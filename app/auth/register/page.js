@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { signIn } from "next-auth/react";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -27,26 +28,28 @@ export default function RegisterPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    setLoading(true);
 
     // Validation
     if (formData.password !== formData.confirmPassword) {
       setError("Passwords do not match");
+      setLoading(false);
       return;
     }
 
     if (formData.password.length < 6) {
       setError("Password must be at least 6 characters");
+      setLoading(false);
       return;
     }
 
     setLoading(true);
 
     try {
+      // Register user
       const response = await fetch("/api/auth/register", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: formData.name,
           email: formData.email,
@@ -63,13 +66,83 @@ export default function RegisterPage() {
         return;
       }
 
-      // Registration successful - redirect to login
-      router.push("/auth/login?registered=true");
+      if (data.success) {
+        // Auto sign in after registration
+        const result = await signIn("credentials", {
+          email: formData.email,
+          password: formData.password,
+          redirect: false,
+        });
+
+        if (result.ok) {
+          // If vendor application, redirect to application completion page
+          if (data.requiresApproval) {
+            router.push("/vendor/apply");
+          } else {
+            router.push("/dashboard");
+          }
+        } else {
+          setError(
+            "Registration successful but login failed. Please try logging in."
+          );
+        }
+      } else {
+        setError(data.message || "Registration failed");
+      }
     } catch (error) {
+      console.error("Registration error:", error);
       setError("An error occurred. Please try again.");
+    } finally {
       setLoading(false);
     }
   };
+
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   setError("");
+
+  //   // Validation
+  //   if (formData.password !== formData.confirmPassword) {
+  //     setError("Passwords do not match");
+  //     return;
+  //   }
+
+  //   if (formData.password.length < 6) {
+  //     setError("Password must be at least 6 characters");
+  //     return;
+  //   }
+
+  //   setLoading(true);
+
+  //   try {
+  //     const response = await fetch("/api/auth/register", {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify({
+  //         name: formData.name,
+  //         email: formData.email,
+  //         password: formData.password,
+  //         role: formData.role,
+  //       }),
+  //     });
+
+  //     const data = await response.json();
+
+  //     if (!response.ok) {
+  //       setError(data.message || "Registration failed");
+  //       setLoading(false);
+  //       return;
+  //     }
+
+  //     // Registration successful - redirect to login
+  //     router.push("/auth/login?registered=true");
+  //   } catch (error) {
+  //     setError("An error occurred. Please try again.");
+  //     setLoading(false);
+  //   }
+  // };
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">

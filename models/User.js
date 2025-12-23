@@ -55,6 +55,18 @@ const UserSchema = new mongoose.Schema(
       shopDescription: { type: String, default: "" },
       shopLogo: { type: String, default: "" },
       isApproved: { type: Boolean, default: false },
+      applicationStatus: {
+        type: String,
+        enum: ["none", "pending", "approved", "rejected"],
+        default: "none",
+      },
+      appliedAt: Date,
+      reviewedAt: Date,
+      reviewedBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+      rejectionReason: String,
       rating: { type: Number, default: 0 },
       totalSales: { type: Number, default: 0 },
       totalProducts: { type: Number, default: 0 },

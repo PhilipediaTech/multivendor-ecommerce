@@ -9,7 +9,7 @@ export async function GET() {
 
     // Get all vendors
     const vendors = await User.find({ role: "vendor" })
-      .select("name email businessName")
+      .select("name email shopName")
       .lean();
 
     // Get product count for each vendor
