@@ -37,7 +37,13 @@ export default function ProductsPage() {
       params.append("page", filters.page);
       params.append("limit", 12);
 
-      const response = await fetch(`/api/products?${params.toString()}`);
+      const response = await fetch(`/api/products?${params.toString()}`, {
+        cache: "no-store",
+        headers: {
+          "Cache-Control": "no-cache",
+        },
+      });
+
       const data = await response.json();
       console.log(data);
       if (data.success) {

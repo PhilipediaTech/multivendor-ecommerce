@@ -35,7 +35,7 @@ export default function ImageGallery({ images, productName }) {
         onClick={() => setIsZoomed(true)}
       >
         <Image
-          src={images[selectedImage]?.url}
+          src={images[selectedImage]}
           alt={`${productName} - Image ${selectedImage + 1}`}
           fill
           sizes="(max-width: 768px) 100vw, 50vw"
@@ -134,7 +134,7 @@ export default function ImageGallery({ images, productName }) {
               }`}
             >
               <Image
-                src={image.url}
+                src={image}
                 alt={`${productName} thumbnail ${index + 1}`}
                 fill
                 sizes="120px"
